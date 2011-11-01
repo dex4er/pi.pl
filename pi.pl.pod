@@ -4,17 +4,17 @@
 
 =head1 NAME
 
-pi.sh - Package Installer for Perl
+pi.pl - Package Installer for Perl
 
 
 =head1 SYNOPSIS
 
-  $ pi.sh area default home_perl
-  $ pi.sh area init home_perl
-  $ pi.sh area sync
-  $ pi.sh list
-  $ pi.sh install Acme-Buffy
-  $ pi.sh list
+  $ pi.pl area default home_perl
+  $ pi.pl area init home_perl
+  $ pi.pl area sync
+  $ pi.pl list
+  $ pi.pl install Acme-Buffy
+  $ pi.pl list
   $ export PERL5LIB=$HOME/perl/lib
   $ perl -MAcme::Buffy -le 'print "ok"'
   
@@ -22,10 +22,10 @@ pi.sh - Package Installer for Perl
 =head1 WARNING
 
 This document describes the experimental implementation of B<pi.pl> as a
-shell script: B<pi.sh>.  The shell script implementation has limited
+shell script: B<pi.pl>.  The shell script implementation has limited
 features and it is just a proof of concept rather than final product.
 
-The shell script B<pi.sh> requires additional software:
+The shell script B<pi.pl> requires additional software:
 
 Shell utilities:
 
@@ -77,7 +77,7 @@ L<YAML>
 
 =head1 DESCRIPTION
 
-B<pi.sh> is a simple manager for Perl binary packages. "Simple" means:
+B<pi.pl> is a simple manager for Perl binary packages. "Simple" means:
 
 =over
 
@@ -91,19 +91,19 @@ it works pretty well without root privileges
 
 =back
 
-B<pi.sh> is also free implementation of ActiveState's PPM Perl Package
+B<pi.pl> is also free implementation of ActiveState's PPM Perl Package
 Manager and it tries to be compatible with ActiveState's packages and
 repositories.
 
-B<pi.sh> is recommended for user who want to install additional Perl modules
+B<pi.pl> is recommended for user who want to install additional Perl modules
 without access to the compiler or root account. It is especially useful in
 shared hosting environment.
 
-B<pi.sh> works with PPM package format. The PPM package has two parts: PPD
+B<pi.pl> works with PPM package format. The PPM package has two parts: PPD
 file, which contains meta-informations about package, and TAR archive, which
 contains the module files.
 
-I<TODO>: B<pi.sh> also works with PAR package format. The PAR package is Perl
+I<TODO>: B<pi.pl> also works with PAR package format. The PAR package is Perl
 version of Java's JAR. Usually, the PAR package contains full application
 with required libraries but it can be also an archive for separate modules.
 
@@ -112,46 +112,46 @@ with required libraries but it can be also an archive for separate modules.
 
 =over
 
-=item B<pi.sh area> [B<list>]
+=item B<pi.pl area> [B<list>]
 
 Lists the available install areas. The list displays the name, number of
 installed packages and "lib" directory location for each install area. If that
 area is read-only or is uninitialized, the name appears in parenthesis. The
 default install area is marked with a "*" after its name.
 
-=item B<pi.sh area add> I<area> I<archlib_path>
+=item B<pi.pl area add> I<area> I<archlib_path>
 
 Adds the I<area> to configuration file and create area's settings based on
 I<archlib_path>.
 
-=item B<pi.sh area remove> I<area>
+=item B<pi.pl area remove> I<area>
 
 Deletes the I<area> from configuration file.
 
-=item B<pi.sh area default> I<area>
+=item B<pi.pl area default> I<area>
 
 Sets the default area to I<area>.
 
-=item B<pi.sh area init> I<area>
+=item B<pi.pl area init> I<area>
 
-Initializes the area. It create F<.pi.pl-area> directory and call B<pi.sh
+Initializes the area. It create F<.pi.pl-area> directory and call B<pi.pl
 area sync> command on it.
 
-=item B<pi.sh area sync> I<area>
+=item B<pi.pl area sync> I<area>
 
-Synchronizes installed packages with those installed by other than B<pi.sh>
+Synchronizes installed packages with those installed by other than B<pi.pl>
 (i.e. the CPAN shell). Finds .packlist files in area location and create
-B<pi.sh>'s indices.
+B<pi.pl>'s indices.
 
-=item B<pi.sh repo> [B<list>]
+=item B<pi.pl repo> [B<list>]
 
-Lists the repositories that B<pi.sh> is configured to use.
+Lists the repositories that B<pi.pl> is configured to use.
 
-=item B<pi.sh repo describe> I<repo>
+=item B<pi.pl repo describe> I<repo>
 
 Describes the repository.
 
-=item B<pi.sh install> [B<package>|B<http://url>|B<ftp://url>]I<file.ppd>|I<file.zip>
+=item B<pi.pl install> [B<package>|B<http://url>|B<ftp://url>]I<file.ppd>|I<file.zip>
 
 Installs the package. If the package is already installed, replaces the old
 version.
@@ -162,7 +162,7 @@ ZIP archive which contains both of them, will be downloaded to the cache
 directory. If package name was provided, the package is downloaded from
 repository which contains the newest version of the package.
 
-=item B<pi.sh remove> I<package> [--area I<area>]
+=item B<pi.pl remove> I<package> [--area I<area>]
 
 Removes the package from the I<area> or each areas.
 
@@ -173,7 +173,7 @@ Removes the package from the I<area> or each areas.
 
 =head2 Main configuration
 
-B<pi.sh>'s main configuration file and indices are located at F<$PERL_PI_DIR>
+B<pi.pl>'s main configuration file and indices are located at F<$PERL_PI_DIR>
 or F<$HOME/.pi.pl> or F</etc/pi.pl>. If the location does not exist, it is
 tried to create as F<$PERL_PI_DIR> or F</etc/pi> or F<$HOME/.pi>.
 
@@ -242,7 +242,7 @@ The internal attributes of Perl packages based on MakeMaker variables:
 $VERSION_FROM should be the main module from package, that means the module 
 which name is based on $NAME.
 
-The B<pi.sh>'s package names are based on $NAME.
+The B<pi.pl>'s package names are based on $NAME.
 
 =head2 Package metainformations file F<$Package.yml>
 
@@ -266,7 +266,7 @@ Syncing is process of generating missing package metainformations based on
 area, the package is scanned and $Package.ppd, $Package.md5sum, $Package.ls
 and $Package.yml files are created.
 
-B<pi.sh> search the .packlist files for each area. The package name is based on
+B<pi.pl> search the .packlist files for each area. The package name is based on
 .packlist file path. The version is guessed by examining the main module from 
 the package.
 
@@ -301,7 +301,7 @@ $PERL_PI_DIR/repo/$REPO/cache directory.
 
 The CPAN packages are distributed under $DISTNAME package name. The packages 
 installed in system are loosing this attribute. The only known attribute is 
-$NAME. The B<pi.sh> uses $NAME names internally so it is possible to recreate 
+$NAME. The B<pi.pl> uses $NAME names internally so it is possible to recreate 
 PPD metainformations from installed packages and use them for resolving the
 dependencies. If the package name is based on $DISTNAME, the recreated PPD 
 file at install time uses $NAME instead and $DISTNAME is preserved as PROVIDE
@@ -310,7 +310,7 @@ element in PPD's XML.
 =head2 @INC vs config.yml
 
 The ActivePerl's areas are configured through @INC array. That means the area
-name and location path are changed if the @INC array is modified. The B<pi.sh>
+name and location path are changed if the @INC array is modified. The B<pi.pl>
 uses own configuration and does not set the areas based on @INC array. The
 package can be installed into the area even if area's blib_lib path is not in
 @INC array.
@@ -318,7 +318,7 @@ package can be installed into the area even if area's blib_lib path is not in
 =head2 XML vs YAML
 
 The original PPM uses XML as container for package and repository description.
-The B<pi.sh> uses YAML as internal data format. The YAML is easier to generate
+The B<pi.pl> uses YAML as internal data format. The YAML is easier to generate
 and to parse. The YAML files are also much smaller than XML files.
 
 
